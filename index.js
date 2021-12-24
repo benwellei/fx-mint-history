@@ -6,7 +6,7 @@ async function getFXtxns(address) {
     const sender = address;
     const target = 'KT1AEVuykWeuuFX7QkEAMNtffzwhe1Z98hJS';
     const entrypoint = 'mint';
-    const limit = 500;
+    const limit = 1000;
     const dir = './logs';
 
     if (!fs.existsSync(dir)) {
@@ -37,7 +37,8 @@ async function getFXtxns(address) {
             return log;
         })
         .then(log => {
-            const path = `${dir}/${address}.csv`;
+            const title = address.substring(address.length - 4);
+            const path = `${dir}/${title}.csv`;
             const headers = ['Date', 'Issuer', 'Price', 'Gas Fee', 'Transaction'];
 
             if (!fs.existsSync(path)) {
@@ -49,14 +50,12 @@ async function getFXtxns(address) {
                 const row = l.join() + "\n"
                 
                 fs.appendFile(path, row, (err) => {
-                    if (err) throw err;
-                    console.log('Mint logged to mint.csv');
-                
+                    if (err) throw err;                
                 });
             });
             
-
+            console.log(`${log.length} entries added to ${title}.csv`);
         })
 }
 
-getFXtxns('YOUR_ADDRESS')
+getFXtxns('YOUR_ADDRESS');
